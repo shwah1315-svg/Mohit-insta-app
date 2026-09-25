@@ -4,91 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MK Insta Profile Viewer</title>
-    <!-- Tailwind CSS for Instagram-like UI -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #fafafa; color: #262626; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #fafafa; color: #262626; display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between; }
+        header { background: #ffffff; border-bottom: 1px solid #dbdbdb; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+        h1 { font-size: 20px; font-weight: 700; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        main { max-width: 400px; width: 100%; margin: auto; padding: 16px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .card { background: #ffffff; border: 1px solid #dbdbdb; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .avatar-ring { width: 70px; height: 70px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743); border-radius: 50%; padding: 2px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; }
+        .avatar-inner { width: 100%; height: 100%; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8e8e8e; font-size: 24px; }
+        .input-box { position: relative; margin-bottom: 12px; }
+        .input-box span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #8e8e8e; font-size: 14px; }
+        input { width: 100%; padding: 10px 10px 10px 28px; background: #fafafa; border: 1px solid #dbdbdb; border-radius: 6px; font-size: 14px; outline: none; }
+        input:focus { border-color: #a8a8a8; }
+        .btn { width: 100%; background: #0095f6; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .btn:hover { background: #1877f2; }
+        .btn-gradient { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); margin-top: 12px; }
+        .hidden { display: none !important; }
+        .change-btn { background: #efefef; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; color: #262626; }
+        footer { text-align: center; font-size: 12px; color: #8e8e8e; padding: 16px; border-top: 1px solid #efefef; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- Top Navigation Bar -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 px-4 py-3 flex justify-between items-center max-w-md mx-auto w-full">
-        <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-purple-600 via-pink-600 to-yellow-500 bg-clip-text text-transparent">MK Insta</h1>
-        <button onclick="resetSearch()" id="changeBtn" class="hidden text-xs font-medium text-sky-500 hover:text-sky-600 bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-100">
-            <i class="fa-solid fa-rotate-right mr-1"></i> Change ID
-        </button>
+    <header>
+        <h1>MK Insta</h1>
+        <button onclick="resetSearch()" id="changeBtn" class="change-btn hidden">Change ID</button>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="max-w-md w-full mx-auto p-4 flex-grow flex flex-col justify-center">
-        
-        <!-- Search Box (Shown only if no user saved) -->
-        <div id="searchContainer" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm text-center">
-            <div class="w-16 h-16 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px] rounded-full mx-auto mb-3">
-                <div class="w-full h-full bg-white rounded-full p-1 flex items-center justify-center">
-                    <i class="fa-solid fa-user text-2xl text-gray-400"></i>
+    <main>
+        <!-- Search Screen -->
+        <div id="searchContainer" class="card">
+            <div class="avatar-ring">
+                <div class="avatar-inner">
+                    <i class="fa-solid fa-user"></i>
                 </div>
             </div>
-            <h2 class="text-base font-semibold mb-1">Instagram Profile</h2>
-            <p class="text-xs text-gray-500 mb-4">Enter username to save and view instantly.</p>
+            <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Instagram Profile</h2>
+            <p style="font-size: 12px; color: #8e8e8e; margin-bottom: 20px;">Enter username to save and view securely.</p>
 
-            <div class="flex flex-col space-y-3">
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">@</span>
-                    <input type="text" id="usernameInput" placeholder="username" 
-                        class="w-full pl-8 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500">
-                </div>
-                <button onclick="saveAndLoadProfile()" 
-                    class="w-full bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 rounded-lg text-sm transition duration-200 shadow-sm">
-                    Save & View Profile
-                </button>
+            <div class="input-box">
+                <span>@</span>
+                <input type="text" id="usernameInput" placeholder="username">
             </div>
+            <button onclick="saveAndLoadProfile()" class="btn">Save & View Profile</button>
         </div>
 
-        <!-- Saved Profile Card (Insta Style - Loads automatically) -->
-        <div id="profileContainer" class="hidden bg-white border border-gray-200 rounded-xl p-6 shadow-sm text-center">
-            <div class="w-20 h-20 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px] rounded-full mx-auto mb-4">
-                <div class="w-full h-full bg-white rounded-full p-1 flex items-center justify-center">
-                    <i class="fa-solid fa-user text-3xl text-gray-500"></i>
+        <!-- Saved Profile Card -->
+        <div id="profileContainer" class="card hidden">
+            <div class="avatar-ring" style="width: 80px; height: 80px;">
+                <div class="avatar-inner" style="font-size: 32px;">
+                    <i class="fa-solid fa-user"></i>
                 </div>
             </div>
             
-            <h2 class="text-lg font-bold mb-1" id="profileUsernameDisplay">@username</h2>
-            <p class="text-xs text-gray-500 mb-6">Profile is saved securely in your device.</p>
+            <h2 id="profileUsernameDisplay" style="font-size: 18px; font-weight: 700; margin-bottom: 6px;">@username</h2>
+            <p style="font-size: 12px; color: #8e8e8e; margin-bottom: 20px;">Profile is saved on your device.</p>
 
-            <div class="space-y-3">
-                <button onclick="openProfileDirectly()" 
-                    class="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-yellow-500 text-white font-medium py-2.5 rounded-lg text-sm transition duration-200 shadow-md">
-                    <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Open Instagram Profile
-                </button>
-                <p class="text-[11px] text-gray-400">Clicking this will instantly load the profile without any blocks.</p>
-            </div>
+            <button onclick="openProfileDirectly()" class="btn btn-gradient">
+                <i class="fa-solid fa-arrow-up-right-from-square" style="margin-right: 6px;"></i> Open Instagram Profile
+            </button>
         </div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="py-3 text-center text-xs text-gray-400 border-t border-gray-100 max-w-md mx-auto w-full">
+    <footer>
         <p>&copy; 2026 MK Insta Viewer</p>
     </footer>
 
     <script>
         let currentUsername = '';
 
-        // Check local storage on page load
         window.onload = function() {
-            const savedUser = localStorage.getItem('mk_insta_user');
-            if (savedUser) {
-                currentUsername = savedUser;
-                showProfileCard(savedUser);
+            try {
+                const savedUser = localStorage.getItem('mk_insta_user');
+                if (savedUser) {
+                    currentUsername = savedUser;
+                    showProfileCard(savedUser);
+                }
+            } catch (e) {
+                console.error(e);
             }
         };
 
         function saveAndLoadProfile() {
-            const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+            const inputField = document.getElementById('usernameInput');
+            if (!inputField) return;
+            const username = inputField.value.trim().toLowerCase();
             if (username) {
                 localStorage.setItem('mk_insta_user', username);
                 currentUsername = username;
@@ -99,10 +101,15 @@
         }
 
         function showProfileCard(username) {
-            document.getElementById('searchContainer').classList.add('hidden');
-            document.getElementById('profileContainer').classList.remove('hidden');
-            document.getElementById('changeBtn').classList.remove('hidden');
-            document.getElementById('profileUsernameDisplay').innerText = '@' + username;
+            const searchCont = document.getElementById('searchContainer');
+            const profileCont = document.getElementById('profileContainer');
+            const changeBtn = document.getElementById('changeBtn');
+            const displayElem = document.getElementById('profileUsernameDisplay');
+
+            if (searchCont) searchCont.classList.add('hidden');
+            if (profileCont) profileCont.classList.remove('hidden');
+            if (changeBtn) changeBtn.classList.remove('hidden');
+            if (displayElem) displayElem.innerText = '@' + username;
         }
 
         function openProfileDirectly() {
@@ -114,10 +121,15 @@
 
         function resetSearch() {
             localStorage.removeItem('mk_insta_user');
-            document.getElementById('profileContainer').classList.add('hidden');
-            document.getElementById('changeBtn').classList.add('hidden');
-            document.getElementById('searchContainer').classList.remove('hidden');
-            document.getElementById('usernameInput').value = '';
+            const searchCont = document.getElementById('searchContainer');
+            const profileCont = document.getElementById('profileContainer');
+            const changeBtn = document.getElementById('changeBtn');
+            const inputField = document.getElementById('usernameInput');
+
+            if (profileCont) profileCont.classList.add('hidden');
+            if (changeBtn) changeBtn.classList.add('hidden');
+            if (searchCont) searchCont.classList.remove('hidden');
+            if (inputField) inputField.value = '';
         }
     </script>
 </body>
